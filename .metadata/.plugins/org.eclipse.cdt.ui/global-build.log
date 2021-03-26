@@ -117,3 +117,6 @@ arm-none-eabi-size LPC1769_asm_blinky.axf; # arm-none-eabi-objcopy -O binary LPC
    text	   data	    bss	    dec	    hex	filename
     100	      0	      0	    100	     64	LPC1769_asm_blinky.axf
  
+15:46:10 **** Incremental Build of configuration Debug for project LPC1769_asm_blinky ****
+make all 
+make: Nothing to be done for `all'.
