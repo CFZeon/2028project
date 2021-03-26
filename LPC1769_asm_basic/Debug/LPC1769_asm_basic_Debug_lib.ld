@@ -1,8 +1,14 @@
 /*
  * GENERATED FILE - DO NOT EDIT
- * (C) Code Red Technologies Ltd, 2008-9
- * Generated linker script library include file for Redlib (none) 
- * (created from redlib_none_c.ld (LPCXpresso v3.6.2 [Build 279] [29/01/2011] ) on Sun Jun 26 14:50:08 SGT 2011)
-*/
+ * (c) Code Red Technologies Ltd, 2008-2021
+ * (c) NXP Semiconductors 2013-2021
+ * Generated linker script file for LPC1769
+ * Created from LibIncTemplate.ld (LPCXpresso v6.1 (4 [Build 194] [2014-01-15] ))
+ * By LPCXpresso v6.1.4 [Build 194] [2014-01-15]  on Fri Mar 26 15:31:19 SGT 2021
+ */
 
-GROUP(libcr_c.a libcr_eabihelpers.a)
+
+ GROUP(
+ libcr_c.a
+ libcr_eabihelpers.a
+ )

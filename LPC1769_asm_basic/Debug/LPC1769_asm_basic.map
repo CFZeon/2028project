@@ -44,8 +44,8 @@ OUTPUT(LPC1769_asm_basic.axf elf32-littlearm)
 .debug_line     0x00000000       0x47
  .debug_line    0x00000000       0x47 ./src/asm.o
 
-.debug_info     0x00000000       0x8a
- .debug_info    0x00000000       0x8a ./src/asm.o
+.debug_info     0x00000000       0x76
+ .debug_info    0x00000000       0x76 ./src/asm.o
 
 .debug_abbrev   0x00000000       0x14
  .debug_abbrev  0x00000000       0x14 ./src/asm.o

@@ -8,8 +8,8 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include subdir.mk
 -include src/subdir.mk
+-include subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -29,7 +29,7 @@ all: LPC1769_asm_basic.axf
 LPC1769_asm_basic.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU Linker'
-	arm-none-eabi-gcc -nostdlib -Tbss 0x10004000 -Xlinker -Map=LPC1769_asm_basic.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T LPC1769_asm_basic_Debug.ld -o"LPC1769_asm_basic.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -nostdlib -Tbss 0x10004000 -Xlinker -Map=LPC1769_asm_basic.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T LPC1769_asm_basic_Debug.ld -o "LPC1769_asm_basic.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

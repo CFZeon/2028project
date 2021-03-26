@@ -1,4 +1,4 @@
-15:11:10 **** Build of configuration Debug for project LPC1769_asm_blinky ****
+15:32:19 **** Incremental Build of configuration Debug for project LPC1769_asm_blinky ****
 make all 
 Building file: ../src/asm.s
 Invoking: MCU Assembler
@@ -17,5 +17,5 @@ arm-none-eabi-size LPC1769_asm_blinky.axf; # arm-none-eabi-objcopy -O binary LPC
     100	      0	      0	    100	     64	LPC1769_asm_blinky.axf
  
 
-15:11:11 Build Finished (took 733ms)
+15:32:20 Build Finished (took 805ms)
 

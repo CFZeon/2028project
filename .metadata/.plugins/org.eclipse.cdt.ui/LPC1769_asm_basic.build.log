@@ -1,0 +1,21 @@
+15:31:19 **** Build of configuration Debug for project LPC1769_asm_basic ****
+make all 
+Building file: ../src/asm.s
+Invoking: MCU Assembler
+arm-none-eabi-gcc -c -x assembler-with-cpp -D__REDLIB__  -DDEBUG -D__CODE_RED -g3 -mcpu=cortex-m3 -mthumb -o "src/asm.o" "../src/asm.s"
+Finished building: ../src/asm.s
+ 
+Building target: LPC1769_asm_basic.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -Tbss 0x10004000 -Xlinker -Map=LPC1769_asm_basic.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T LPC1769_asm_basic_Debug.ld -o "LPC1769_asm_basic.axf"  ./src/asm.o   
+Finished building target: LPC1769_asm_basic.axf
+ 
+make --no-print-directory post-build
+Performing post-build steps
+arm-none-eabi-size LPC1769_asm_basic.axf; # arm-none-eabi-objcopy -O binary LPC1769_asm_basic.axf LPC1769_asm_basic.bin ; checksum -p LPC1769 -d LPC1769_asm_basic.bin;
+   text	   data	    bss	    dec	    hex	filename
+     76	      0	      4	     80	     50	LPC1769_asm_basic.axf
+ 
+
+15:31:20 Build Finished (took 991ms)
+
