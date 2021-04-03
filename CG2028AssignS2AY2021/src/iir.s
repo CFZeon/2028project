@@ -38,22 +38,28 @@ ynvalue:
 initloop:
 	MOV R11, R0
 	MOV R12, #0x00
+@initloop:
+@	MOV R9, R0
 
-@ to note: we can make code faster by diving the final value by a0
 loopynvalue:
+	@get compare value
+	@MOV R10, #4
+	@MUL R11, R0, R10
 	@get value of X and Y at index 0
 	LDR R6, =XSTORE
+	ADD R6, R12
 	LDR R6, [R6]
 	LDR R7, =YSTORE
+	ADD R7, R12
 	LDR R7, [R7]
 	@increment iterator
 	ADD R12, #4
 	@get a[j+1]
-	LDR R8, =XSTORE
+	MOV R8, R1
 	ADD R8, R12 @increments the address value by 1 integer(4bytes)
 	LDR R8, [R8]
 	@get b[j+1]
-	LDR R9, =YSTORE
+	MOV R9, R2
 	ADD R9, R12 @increments the address value by 1 integer(4bytes)
 	LDR R9, [R9]
 	@calculate a portion and b portion
@@ -63,17 +69,56 @@ loopynvalue:
 	SUB R5, R6
 	@ load value of a[0] into R6
 	LDR R6, [R2]
-	LDR R6, [R6]
 	SDIV R5, R6
-	@ iterator, initialized to N value in initloop
+	ADD R4, R5
 	SUBS R11, #1
 	BNE loopynvalue
 
+
+initloopshift:
+	@decrements iterator to N*4 times from (N-1)*4 times
+	@SUB R12, #4
+	@sets value of iterator to N again and decrement it by 1
+	MOV R11, R0
+	@SUB R11, #1
+	@initialize registers
+	LDR R5, =XSTORE
+	ADD R5, R12
+	LDR R6, =YSTORE
+	ADD R6, R12
+
 loopshift:
+	@decrement iterator to 4 bytes lower
+	SUB R12, #4
+	@load address of XSTORE
+	LDR R7, =XSTORE
+	@increment by (loop-1)*4 bytes
+	ADD R7, R12
+	@get value at that address
+	@assign value to XSTORE
+	LDR R7, [R7]
+	STR R7, [R5]
+	SUB R5, #4
+	@load address of YSTORE
+	LDR R7, =YSTORE
+	@increment by (loop-1)*4 bytes
+	ADD R7, R12
+	@get value at that address
+	@LDR R7, [R7]
+	@assign value to YSTORE
+	LDR R7, [R7]
+	STR R7, [R6]
+	SUB R6, #4
+	@decrement loop iterator by 1
+	SUBS R11, #1
+	BNE loopshift
 
-
-@divide the value by 100
-divide:
+store:
+	LDR R7, =XSTORE
+	STR R3, [R7]
+	LDR R7, =YSTORE
+	STR R4, [R7]
+div:
 	MOV R5, 0x64
 	SDIV R0, R4, R5
 
@@ -88,5 +133,5 @@ POP {R4-R12}
 @.lcomm label num_bytes
 .lcomm XSTORE 4 * (N_MAX)
 .lcomm YSTORE 4 * (N_MAX)
-@.lcomm XPTR 4
-@.lcomm YPTR 4
+.lcomm XPTR 4
+.lcomm YPTR 4
