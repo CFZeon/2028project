@@ -30,70 +30,68 @@ PUSH {R4-R12}
 
 @ calculate y_n value
 ynvalue:
-	LDR R4, [R1]
-	LDR R5, [R2]
-	MUL R4, R3
+	LDR R4, [R1]        @0x05914000
+	MUL R4, R4, R3      @0x00004314
 initloop:
-	MOV R11, R0
-	MOV R12, #0x00
-	LDR R6, =XSTORE
-	LDR R7, =YSTORE
-	MOV R8, R1
-	ADD R8, #0x4
-	MOV R9, R2
-	ADD R9, #0x4
+	MOV R12, R0         @0x01A0C000
+	LDR R6, =XSTORE     @ idk lol
+	LDR R7, =YSTORE     @ idk lol
+	MOV R8, R1          @0x01A08001
+	ADD R8, #0x4        @0x02888004
+	MOV R9, R2          @0x01A09002
+	ADD R9, #0x4        @0x02899004
 loopynvalue:
 	@b(j+1)*x_store[j]
-	LDR R5, [R6], #0x4
+	LDR R5, [R6], #0x4  @0x05965004
 	@get b[j+1]
-	LDR R10, [R8], #0x4
+	LDR R10, [R8], #0x4 @0x0598A004
 	@times b and x_store
-	MUL R5, R10
+	MUL R5, R5, R10     @0x00005A15
 	@add y_n with b*x_store
-	ADD R4, R5
+	ADD R4, R5          @0x00854000
 	@a[j+1]*y_store[j]
-	LDR R5, [R7], #0x4
-	LDR R10, [R9], #0x4
-	MUL R5, R10
+	LDR R5, [R7], #0x4  @0x05975004
+	LDR R10, [R9], #0x4 @0x0599A004
+	MUL R5, R5, R10     @0x00005A15
 	@calculate (b[j+1]*x_store[j]-a[j+1]*y_store[j])
-	SUB R4, R5
-	SUBS R11, #1
-	BNE loopynvalue
+	SUB R4, R5          @0x00454000
+	SUBS R12, #1        @0x025CC001
+	BNE loopynvalue     @0x18000028
 divideynbya:
-	LDR R6, [R2]
-	SDIV R4, R6
+	LDR R6, [R2]        @0x05926000
+	SDIV R4, R6         @unrequired
 initloopshift:
-	MOV R11, R0
+	MOV R12, R0         @0x01A0C000
 	@initialize registers
-	LDR R5, =XSTORE
-	LDR R6, =YSTORE
+	LDR R5, =XSTORE     @ idk lol
+	LDR R6, =YSTORE     @ idk lol
 	@get value of current index (x[j])and then add index by 1
-	LDR R7, [R5], #0x4
+	LDR R7, [R5], #0x4  @0x05957004
 	@get value of current index (y[j])and then add index by 1
-	LDR R8, [R6], #0x4
+	LDR R8, [R6], #0x4  @0x05968004
 loopshift:
 	@get val at next j+1 of x
-	LDR R9, [R5]
+	LDR R9, [R5]        @0x05959000
 	@store prev val to current and change address to j+1
-	STR R7, [R5], #0x4
+	STR R7, [R5], #0x4  @0x05857004
 	@change x[j] value stored to x[j+1]
-	MOV R7, R9
+	MOV R7, R9          @0x01A07009
 	@get value of current index (j) and then add index by 1
-	LDR R10, [R6]
+	LDR R10, [R6]       @0x0596A000
 	@get val at next j+1
-	STR R8, [R6], #0x4
+	STR R8, [R6], #0x4  @0x05868004
 	@change y[j] value stored to y[j+1]
-	MOV R8, R10
-	SUBS R11, #1
-	BNE loopshift
+	MOV R8, R10         @0x01A0800A
+	SUBS R12, #1        @0x025CC001
+	BNE loopshift       @0x18000020
 store:
-	LDR R7, =XSTORE
-	STR R3, [R7]
-	LDR R7, =YSTORE
-	STR R4, [R7]
+	LDR R7, =XSTORE     @ idk lol
+	STR R3, [R7]        @0x05073000
+	LDR R7, =YSTORE     @ idk lol
+	STR R4, [R7]        @0x05074000
 div:
-	MOV R5, 0x64
-	SDIV R0, R4, R5
+	MOV R5, 0x64        @0x03A05064
+	SDIV R0, R4, R5     @unrequired
 
 @ prepare value to return (y_n) to C program in R0
 @ POP / restore original register values. DO NOT save or restore R0. Why?
