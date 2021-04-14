@@ -18,82 +18,61 @@
 @....
 
 iir:
-@ PUSH / save (only those) registers which are modified by your function
+@ PUSH / save (only those) registers
+@ which are modified by your function
 @ parameter registers need not be saved.
 PUSH {R4-R12}
 @ write asm function body here
-@loadstatic:
-@	LDR R4, =XSTORE
-@	LDR R5, =YSTORE
-@	LDR R6, =XPTR
-@	LDR R7, =YPTR
-
 @ calculate y_n value
 ynvalue:
-	LDR R4, [R1]
-	MUL R4, R3
+	LDR R4, [R1]        @0x05914000
+	MUL R4, R4, R3      @0x00004314
 initloop:
-	MOV R12, R0
-	LDR R6, =XSTORE
-	LDR R7, =YSTORE
-	MOV R8, R1
-	ADD R8, #0x4
-	MOV R9, R2
-	ADD R9, #0x4
+	MOV R12, R0         @0x01A0C000
+	LDR R6, =XSTORE		@0x059F609C
+	LDR R7, =YSTORE		@0x059F709C
+	MOV R8, R1          @0x01A08001
+	ADD R8, #0x4        @0x02888004
+	MOV R9, R2          @0x01A09002
+	ADD R9, #0x4        @0x02899004
 loopynvalue:
-	@b(j+1)*x_store[j]
-	LDR R5, [R6], #0x4
-	@get b[j+1]
-	LDR R10, [R8], #0x4
-	@times b and x_store
-	MUL R5, R10
-	@add y_n with b*x_store
-	ADD R4, R5
-	@a[j+1]*y_store[j]
-	LDR R5, [R7], #0x4
-	LDR R10, [R9], #0x4
-	MUL R5, R10
-	@calculate (b[j+1]*x_store[j]-a[j+1]*y_store[j])
-	SUB R4, R5
-	SUBS R12, #1
-	BNE loopynvalue
+	LDR R5, [R6], #0x4  @0x05965004
+	LDR R10, [R8], #0x4 @0x0598A004
+	MUL R5, R5, R10     @0x00005A15
+	ADD R4, R5          @0x00854000
+	LDR R5, [R7], #0x4  @0x05975004
+	LDR R10, [R9], #0x4 @0x0599A004
+	MUL R5, R5, R10     @0x00005A15
+	SUB R4, R5          @0x00454000
+	SUBS R12, #1        @0x025CC001
+	BNE loopynvalue     @0x18000028
 divideynbya:
-	LDR R6, [R2]
-	SDIV R4, R6
+	LDR R6, [R2]        @0x05926000
+	SDIV R4, R6         @unrequired
 initloopshift:
-	MOV R12, R0
-	MOV R7, #0x4
-	@initialize registers
-	LDR R5, =XSTORE
-	LDR R6, =YSTORE
-	@increment address at xstore to the index at the end
-	MLA R5, R0, R7, R5
-	@increment address at ystore to the index at the end
-	MLA R6, R0, R7, R6
+	MOV R12, R0         @0x01A0C000
+	MOV R7, #0x4 		@0x03A07004
+	LDR R5, =XSTORE		@0x059F504C
+	LDR R6, =YSTORE		@0x059F604C
+	MLA R5, R0, R7, R5	@0x00255710
+	MLA R6, R0, R7, R6	@0x00266710
 loopshift:
-	@decrement index of xstore by 1 (j-1)
-	SUB R5, #0x4
-	@load value at xstore[j-1] into R7
-	LDR R7, [R5]
-	@store value at j-1 to j
-	STR R7, [R5,#0x4]
-	@decrement index of ystore by 1 (j-1)
-	SUB R6, #0x4
-	@load value at ystore[j-1] into R7
-	LDR R7, [R6]
-	@store value at j-1 to j
-	STR R7, [R6,#0x4]
-	@decrement iterator by 1
-	SUBS R12, #1
-	BNE loopshift
+	SUB R5, #0x4		@0x02455004
+	LDR R7, [R5]		@0x05957000
+	STR R7, [R5,#0x4]	@0x05857004
+	SUB R6, #0x4		@0x02466004
+	LDR R7, [R6]		@0x05967000
+	STR R7, [R6,#0x4]	@0x05867004
+	SUBS R12, #1		@0x025CC001
+	BNE loopshift		@0x18000020
 store:
-	LDR R7, =XSTORE
-	STR R3, [R7]
-	LDR R7, =YSTORE
-	STR R4, [R7]
+	LDR R7, =XSTORE		@0x059F701C
+	STR R3, [R7]        @0x05073000
+	LDR R7, =YSTORE		@0x059F7018
+	STR R4, [R7]        @0x05074000
 div:
-	MOV R5, 0x64
-	SDIV R0, R4, R5
+	MOV R5, 0x64        @0x03A05064
+	SDIV R0, R4, R5     @unrequired
 
 @ prepare value to return (y_n) to C program in R0
 @ POP / restore original register values. DO NOT save or restore R0. Why?
@@ -104,5 +83,5 @@ POP {R4-R12}
 @label: .word value
 .equ N_MAX, 10
 @.lcomm label num_bytes
-.lcomm XSTORE 4 * (N_MAX)
+.lcomm XSTORE 4 * (N_MAX) 
 .lcomm YSTORE 4 * (N_MAX)
